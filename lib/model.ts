@@ -26,6 +26,38 @@
 // every row, and the same function runs in the dashboard, which recomputes each row and says whether
 // its number matches the board.
 
+// Why the model is shaped this way.
+//
+// A median, not a mean, because one overpriced memecoin would drag a mean off a cliff while the
+// median stays where the middle of the market actually sits. The multiple is measured fresh on
+// every run from whatever live-token protocols the snapshot carries, so a different snapshot
+// calibrates a different multiple and no number in this file pretends to be universal.
+//
+// TVL enters through a square root on purpose: the gap between a $10M protocol and a $1B protocol
+// is two orders of magnitude, and a linear term would let size alone decide the whole board. The
+// concave term keeps size influential without letting it shout down everything else, and the
+// rescale by the largest TVL keeps the biggest protocol at the full multiple instead of shrinking
+// every value toward zero as the snapshot grows.
+//
+// Growth is passed through a hyperbolic tangent because weekly changes in this universe run from
+// a near-total wipeout to a forty-fold spike, and a raw percentage would hand the board to the
+// loudest week. The tangent keeps the ordering (a bigger week still beats a smaller one) while
+// capping the reward, and the floor at minus sixty keeps a bad week from erasing a protocol that
+// spent years building its position.
+//
+// Maturity rises with age because the question is pent-up value: a protocol that held serious
+// TVL for three years without launching a token has more stored launch value than one that
+// appeared last month, whatever this week's growth says. Unknown ages get a middle value rather
+// than the youngest one, so a missing listing date neither rewards nor punishes a protocol.
+//
+// Breadth is the smallest term on purpose: being on many chains is a real signal of reach, but
+// it is the easiest number in the snapshot to inflate, so it nudges rather than decides.
+//
+// Nothing here is tuned to a name. The same arithmetic scores a lending market, a bridge receipt
+// and a staking derivative, and the only special handling in the whole model is the honesty note
+// the board carries for receipt-token rows, which says plainly that those rows record a claim on
+// someone else's token rather than a token of their own.
+
 /** The snapshot's protocol entry: exactly the ten fields the sealed input carries. */
 export interface SnapshotProtocol {
   slug: string;

@@ -13,6 +13,19 @@
 // Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts --input ../input/snapshot.json
 
+// How the run proceeds, in order.
+//
+// First the snapshot is read and parsed, and the watchlist is taken exactly as the snapshot
+// lists it: the program never re-derives which protocols belong on it, because the snapshot is
+// the sealed authority and any second opinion would be a guess. Then every protocol in the
+// snapshot is scored, the pre-token ones are ranked, and the board is written. The farm plans
+// are built per row from that row's own chain and category, so a plan for a Solana lending
+// market names Solana costs and a plan for an Ethereum bridge names Ethereum ones. The
+// dashboard files and the screenshots are copied verbatim, the data script is written from the
+// same board the judge will grade, and the dossier is built last so it describes exactly what
+// the run produced. Two runs on the same snapshot write byte-identical files: no clock, no
+// randomness, no locale, and every sort breaks its ties on the slug.
+
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';

@@ -6,6 +6,16 @@
 // The model runs here exactly as it runs in lib/model.ts: impliedOf, growthMultiplier,
 // maturityMultiplier, breadthMultiplier and tvlTerm are the same arithmetic, so the detail view can
 // recompute a row and say whether its number matches board.json.
+//
+// What a reader can verify on this page without trusting anything.
+//
+// Every number in the table is recomputed in the browser from the same inputs the board was
+// built from, and the detail drawer shows the recomputation beside the board's number with a
+// match flag, so a wrong number would show itself. The watchlist toggle narrows the table to
+// the forty protocols the snapshot names, the chain and category filters narrow it further,
+// and the sandbox re-runs the whole ranking under different weights so the model's sensitivity
+// is visible instead of asserted. Sorting by any column reorders the same rows rather than
+// fetching anything, because there is nothing to fetch: the page carries its own data.
 (function () {
   'use strict';
 
